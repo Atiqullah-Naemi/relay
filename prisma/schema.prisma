@@ -1,0 +1,71 @@
+// use prisma-8
+
+
+model BrowserProfile {
+  userId String @id
+  contextId String @unique
+  loginSessionId String? @unique
+  loginSessionExpiresAt DateTime?
+  updatedAt temporal.updatedAt()
+
+  @@map("browserProfile")
+}
+
+
+model Agent {
+  id String @unique
+  name String
+  description String
+  enabled Boolean @default(true)
+  tools String[]
+  schedule String
+  url String?
+  selector String? 
+  lastRun String @default("Never run")
+  createdAt DateTime @default(now())
+  updatedAt temporal.updatedAt()
+  runs Run[]
+  userId String
+
+  @@id([userId, id])
+  @@index([userId, createdAt])
+
+
+  @@map("agent")
+}
+
+
+
+model Run {
+  id String
+  agentId String
+  name String
+  trigger String
+  started String
+  duration String
+  status RunStatus
+  logs String[]
+  output String @default("")
+  input String @default("")
+  parentRunId String?
+  agent Agent @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt temporal.updatedAt()
+
+  userId String
+
+
+  @@id([userId, id])
+  @@index([userId, createdAt])
+  @@unique([userId, parentRunId])
+  @@index([userId, agentId])
+
+  @@map("run")
+}
+
+enum RunStatus {
+  Running
+  Success
+  Failed
+  NeedsInput
+}
