@@ -1,0 +1,227 @@
+.page {
+  --background: #ffffff;
+  --foreground: #172033;
+  --card: #ffffff;
+  --card-foreground: #172033;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --border: #e2e8f0;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --ring: #93c5fd;
+  min-height: 100dvh;
+  overflow: clip;
+  background: #ffffff;
+  color: #172033;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+.main {
+  max-width: none;
+  padding: 0;
+}
+
+.skipLink {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  transform: translateY(-160%);
+  border-radius: 8px;
+  background: #172033;
+  padding: 12px 18px;
+  color: #ffffff;
+}
+
+.skipLink:focus {
+  transform: translateY(0);
+}
+
+.navLink {
+  transition: color 160ms ease;
+}
+
+.navLink:hover {
+  color: #2563eb;
+}
+
+.page .primaryButton,
+.page .darkButton,
+.page .secondaryButton,
+.page .whiteButton {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.primaryButton {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow:
+    0 3px 8px #2563eb22,
+    inset 0 1px 0 #ffffff26;
+}
+
+.primaryButton:hover {
+  background: #1d4ed8;
+}
+
+.darkButton {
+  background: #172033;
+  color: #ffffff;
+}
+
+.darkButton:hover {
+  background: #334155;
+}
+
+.secondaryButton {
+  border-color: #e2e8f0;
+  background: #ffffff;
+  color: #334155;
+  box-shadow: 0 2px 3px #17203304;
+}
+
+.secondaryButton:hover {
+  background: #f8fafc;
+  color: #172033;
+}
+
+.whiteButton {
+  background: #ffffff;
+  color: #172033;
+}
+
+.whiteButton:hover {
+  background: #dbeafe;
+}
+
+.hero {
+  position: relative;
+  background: radial-gradient(ellipse at 50% 80%, #dceaff99, transparent 65%);
+}
+
+.hero::before {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(#94a3b812 1px, transparent 1px),
+    linear-gradient(90deg, #94a3b812 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(transparent, #000000 70%, transparent);
+  pointer-events: none;
+  content: "";
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #dbeafe;
+  border-radius: 999px;
+  background: #eff6ff99;
+  padding: 7px 12px;
+  color: #2856a3;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background 160ms ease;
+}
+
+.eyebrow:hover {
+  background: #dbeafe;
+}
+
+.heroTitle {
+  margin: 25px 0 0;
+  font-size: clamp(2.8rem, 7.2vw, 5.25rem);
+  font-weight: 600;
+  letter-spacing: -0.065em;
+  line-height: 1.08;
+}
+
+.heroDescription {
+  max-width: 540px;
+  margin: 24px auto 0;
+  color: #64748b;
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  line-height: 1.75;
+}
+
+.sectionLabel {
+  color: #2563eb;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+}
+
+.sectionTitle {
+  margin-top: 14px;
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 1.2;
+}
+
+.featureIcon {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e8eef7;
+  border-radius: 12px;
+  background: #f8faff;
+  color: #2563eb;
+}
+
+.featureTitle {
+  margin: 20px 0 0;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.35;
+}
+
+.stepTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+
+.faqTrigger {
+  align-items: center;
+  gap: 16px;
+  padding: 22px 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.cta {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #253654;
+  border-radius: 24px;
+  background: #101e36;
+  padding: 64px 24px;
+  color: #ffffff;
+  text-align: center;
+}
+
+.cta::before {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 100% 100%, #2563eb55, transparent 65%),
+    radial-gradient(ellipse at 0 0, #2563eb22, transparent 60%);
+  pointer-events: none;
+  content: "";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page *,
+  .page *::before,
+  .page *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button"
 import { useUser } from "@clerk/nextjs"
 import { Clock3, LayoutGrid, Plug, Plus, SettingsIcon } from "lucide-react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 const navigations = [
-  { name: "Dashboard", href: "/", icon: LayoutGrid },
+  { name: "Dashboard", href: "/dashboard", icon: LayoutGrid },
   { name: "Runs", href: "/runs", icon: Clock3 },
   { name: "Integrations", href: "/integrations", icon: Plug },
   { name: "Settings", href: "/settings", icon: SettingsIcon },
@@ -15,6 +16,9 @@ const navigations = [
 const view = "Dashboard"
 export const Sidebar = () => {
   const { user } = useUser()
+  const pathname = usePathname()
+
+  if (pathname === "/") return null
 
   return (
     <aside className="sidebar">
