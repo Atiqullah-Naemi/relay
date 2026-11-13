@@ -44,7 +44,7 @@ export const runs = new Elysia({ prefix: "/runs" })
           body.input
         )
 
-        if (!queued.created) return status(202, queued.run)
+        if (!queued.created) return status(202, { data: queued.run })
         run = queued.run
       } else {
         run = await db.orm.public.Run.create({

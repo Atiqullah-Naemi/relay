@@ -56,6 +56,14 @@ export async function getRun(userId: string, id: string) {
   return run
 }
 
+export async function getRuns(userId: string) {
+  const runs = await db.orm.public.Run.where({ userId })
+    .select(...runSelect)
+    .all()
+
+  return runs
+}
+
 export async function saveRun(userId: string, run: Run) {
   await db.orm.public.Run.upsert({
     create: { ...run, userId },

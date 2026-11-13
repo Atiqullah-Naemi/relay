@@ -75,13 +75,20 @@ import {
   DialogHeader,
 } from "./ui/dialog"
 import { useState } from "react"
+import { useAgent } from "@/hooks/use-agent"
 
 interface RunProps {
   runs: Run[]
+  userId: string
 }
 
-export function Runs({ runs }: RunProps) {
+export function Runs({ runs, userId }: RunProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [selectedRun, setSelectedRun] = useState<Run | null>(null)
+
+  const { state, applyUpdate, error, retry } = useAgent(userId)
+
+  const activeRun = state?.runs.find((item) => item.id === selectedRun?.id)
 
   return (
     <>
@@ -97,7 +104,13 @@ export function Runs({ runs }: RunProps) {
         </TableHeader>
         <TableBody>
           {runs.map((run) => (
-            <TableRow key={run.name} onClick={() => setIsOpen(true)}>
+            <TableRow
+              key={run.name}
+              onClick={() => {
+                setIsOpen(true)
+                setSelectedRun(run)
+              }}
+            >
               <TableCell>{run.name}</TableCell>
               <TableCell>{run.trigger}</TableCell>
               <TableCell>{run.duration}</TableCell>
@@ -119,42 +132,37 @@ export function Runs({ runs }: RunProps) {
       </Table>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="m-0 p-0 sm:max-w-6xl">
-          <DialogHeader>
-            <DialogDescription>
-              <div className="overflow-hidden rounded-xl border font-mono text-xs text-slate-900">
-                <div className="flex w-full items-center justify-between border-b border-r-slate-300 px-4 py-3 text-[11px] tracking-widest text-slate-900">
-                  <div className="flex w-[calc(100%-100px)] items-center justify-between">
-                    <span>Event Stream</span>
-                    <span>{events.length} Events </span>
-                  </div>
-                </div>
-
-                <div className="divide-y divide-slate-300/70">
-                  {events.map((event, index) => {
-                    return (
-                      <div
-                        key={`${event.time}-${index}`}
-                        className="hover:bgsla800/40 flex items-baseline gap-3 px-4 py-3 transition-colors"
-                      >
-                        <span className="shrin-0 text-slate-900">
-                          {event.time}
-                        </span>
-                        <span
-                          className={`shrin-0 w-16 font-semibold ${levelColors[event.level]}`}
-                        >
-                          {event.level}
-                        </span>
-                        <span className="min-w-0 leading-relaxed wrap-break-word">
-                          {event.message}
-                        </span>
-                      </div>
-                    )
-                  })}
+        <DialogContent className="m-0 h-125 overflow-y-scroll p-0 sm:max-w-6xl">
+          <DialogDescription>
+            <div className="overflow-hidden rounded-xl border font-mono text-xs text-slate-900">
+              <div className="flex w-full items-center justify-between border-b border-r-slate-300 px-4 py-3 text-[11px] tracking-widest text-slate-900">
+                <div className="flex w-[calc(100%-100px)] items-center justify-between">
+                  <span>Event Stream</span>
+                  <span>{events.length} Events </span>
                 </div>
               </div>
-            </DialogDescription>
-          </DialogHeader>
+
+              <div className="divide-y divide-slate-300/70">
+                {activeRun?.logs.map((item, index) => {
+                  const time = new Date()
+                  return (
+                    <div
+                      key={`${item}-${index}`}
+                      className="hover:bgsla800/40 flex items-baseline gap-3 px-4 py-3 transition-colors"
+                    >
+                      <span className="shrin-0 text-slate-900">
+                        {time.toLocaleDateString()}
+                      </span>
+
+                      <span className="min-w-0 leading-relaxed wrap-break-word">
+                        {item}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </DialogDescription>
         </DialogContent>
       </Dialog>
     </>

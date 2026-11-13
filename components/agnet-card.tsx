@@ -22,15 +22,19 @@ import {
 import { Button } from "./ui/button"
 import { useState } from "react"
 import { Spinner } from "./ui/spinner"
+import { useAgent } from "@/hooks/use-agent"
 
 type ItegrationIcon = (typeof integrationItems)[number]["icon"]
 interface AgentCardProps {
   agent: Agent
   onEdit: () => void
+  userId?: string
 }
 
-export const AgentCard = ({ agent, onEdit }: AgentCardProps) => {
+export const AgentCard = ({ agent, onEdit, userId }: AgentCardProps) => {
   const router = useRouter()
+  const { state, applyUpdate, error, retry } = useAgent(userId!)
+
   const [isLoading, setIsLoading] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
@@ -49,7 +53,13 @@ export const AgentCard = ({ agent, onEdit }: AgentCardProps) => {
   const runAgent = async () => {
     try {
       setIsLoading(true)
-      await apiClient.runs.post({ agentId: agent.id })
+      const { data, error } = await apiClient.runs.post({ agentId: agent.id })
+
+      if (error) throw new Error("Failed to run agent")
+      if (!data) throw new Error("Unexpected return from api")
+      if (!("data" in data)) throw new Error("Invalide API reponse")
+
+      applyUpdate({ type: "run", run: data.data })
     } finally {
       setIsLoading(false)
       router.refresh()

@@ -1,10 +1,12 @@
 import { Runs } from "@/components/runs"
 import { TopBar } from "@/components/top-bar"
 import { getApiClient } from "@/lib/api-client"
+import { currentUser } from "@clerk/nextjs/server"
 import { headers } from "next/headers"
 
 export default async function RunsPage() {
   const apiClient = getApiClient(await headers())
+  const user = await currentUser()
 
   const { data } = await apiClient.runs.get()
 
@@ -18,7 +20,7 @@ export default async function RunsPage() {
           <h1 className="font-medium">Runs</h1>
           <p className="text-sm">Evey execution with logs and outputs</p>
         </div>
-        <Runs runs={runs} />
+        <Runs runs={runs} userId={user?.id!} />
       </div>
     </div>
   )

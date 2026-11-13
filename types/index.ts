@@ -41,11 +41,9 @@ export interface Settings {
   model: string
   background: string
 }
-export interface State {
+export interface AgentState {
   agents: Agent[]
   runs: Run[]
-  settings: Settings
-  demo: boolean
   browserReady: boolean
 }
 export interface Connection {

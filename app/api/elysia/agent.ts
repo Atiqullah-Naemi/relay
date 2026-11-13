@@ -2,7 +2,7 @@ import { Elysia } from "elysia"
 import * as z from "zod"
 import { clerkPlugin } from "elysia-clerk"
 import { db } from "@/prisma/db"
-import { getAgents } from "@/lib/db-utils"
+import { getAgents, getRuns } from "@/lib/db-utils"
 
 export const agents = new Elysia({ prefix: "/agents" })
   .use(clerkPlugin())
@@ -14,6 +14,21 @@ export const agents = new Elysia({ prefix: "/agents" })
     const agents = await getAgents(userId)
 
     return agents
+  })
+  .get("/state", async ({ status, auth }) => {
+    const { userId } = auth()
+
+    if (!userId) return status(401, "Unauthorized")
+
+    const [agents, runs] = await Promise.all([
+      getAgents(userId),
+      getRuns(userId),
+    ])
+    return {
+      agents,
+      runs,
+      browserReady: Boolean(process.env.BROWSERBASE_API_KEY),
+    }
   })
   .post(
     "/",
