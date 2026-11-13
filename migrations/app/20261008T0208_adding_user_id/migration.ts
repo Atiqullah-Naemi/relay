@@ -4,6 +4,7 @@ import endContract from '../../snapshots/8840302a12f56fa4fd3b00a3394f11321d34562
 import type { Contract as Start } from '../../snapshots/5cfd904a2a3ba11158e06acdedfae0d134b6faf47248ba02b81d6feb9586fbab/contract';
 import startContract from '../../snapshots/5cfd904a2a3ba11158e06acdedfae0d134b6faf47248ba02b81d6feb9586fbab/contract.json' with { type: 'json' };
 import { Migration, MigrationCLI, col, placeholder } from '@prisma/orm-postgres/migration';
+import { contractFromJson } from '@prisma/orm-postgres/static';
 
 export default class M extends Migration<Start, End> {
   override readonly startContractJson = startContract;
@@ -16,7 +17,7 @@ export default class M extends Migration<Start, End> {
         table: 'agent',
         column: col('userId', 'text', { codecRef: { codecId: 'pg/text@1' } }),
       }),
-      this.dataTransform(endContract, 'backfill-agent-userId', {
+      this.dataTransform(contractFromJson<End>(endContract), 'backfill-agent-userId', {
         check: () => placeholder('backfill-agent-userId:check'),
         run: () => placeholder('backfill-agent-userId:run'),
       }),

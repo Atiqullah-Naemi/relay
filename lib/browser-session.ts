@@ -1,5 +1,5 @@
 import { Browserbase } from "@browserbasehq/sdk"
-import { browserbase, StagehandBrowser } from "@browserbasehq/stagehand"
+import { browserbase } from "@browserbasehq/stagehand"
 import { resolve } from "node:path"
 import { createReadStream } from "node:fs"
 
@@ -13,10 +13,7 @@ export async function launchBrowserSession(
     timeout: 30000,
   })
 
-  let browser: StagehandBrowser | undefined
-  let sessionId: string | undefined
   let extensionId: string | undefined
-  let phase = "extension upload"
 
   async function close() {
     try {
@@ -33,12 +30,13 @@ export async function launchBrowserSession(
     }
   }
 
-  const archive = createReadStream(
+  const archivePath =
     process.env.STAGEHAND_EXTENSION_ARCHIVE_PATH?.trim() ||
-      resolve(
-        "node_modules/@browserbasehq/stagehand/dist/assets/stagehand-extension.zip"
-      )
-  )
+    resolve(
+      "node_modules/@browserbasehq/stagehand/dist/assets/stagehand-extension.zip"
+    )
+  // The bundled ZIP is explicitly included in next.config.ts; overrides are runtime paths.
+  const archive = createReadStream(/* turbopackIgnore: true */ archivePath)
 
   try {
     extensionId = (await client.extensions.create({ file: archive })).id
@@ -46,17 +44,14 @@ export async function launchBrowserSession(
     archive.destroy()
   }
 
-  phase = "session creation"
-
   const session = await client.sessions.create({
     ...browserSessionOptions(contextId),
     extensionId,
     userMetadata: { stagehand: "true" },
   })
 
-  sessionId = session.id
-  phase = "connections"
-  browser = await browserbase.connect({
+  const sessionId = session.id
+  const browser = await browserbase.connect({
     apiKey: process.env.BROWSERBASE_API_KEY!,
     sessionId,
   })

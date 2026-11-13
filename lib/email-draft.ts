@@ -33,7 +33,7 @@ export function requestEmailDraft(agent: Agent, input = "") {
   return (
     /\bdrafts?\b/i.test(task) &&
     (/\b(?:e-?mail|gmail|inbox)\b/i.test(task) ||
-      (agent.tools.includes("M") && /\bcover[ -]letters?\b/i.test(task)))
+      (agent.tools.includes("Gmail") && /\bcover[ -]letters?\b/i.test(task)))
   )
 }
 
