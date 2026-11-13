@@ -2,6 +2,7 @@ import { Connection } from "@/types"
 import { Composio } from "@composio/core"
 
 export const toolkits = {
+  BrowserBase: "BrowserBase",
   Notion: "notion",
   Gmail: "gmail",
   Slack: "slack",

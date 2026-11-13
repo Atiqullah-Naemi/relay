@@ -49,6 +49,7 @@ export const integrations = new Elysia({ prefix: "/integrations" })
     {
       body: z.object({
         integrationId: z.enum([
+          "BrowserBase",
           "Notion",
           "GoogleSheets",
           "Gmail",
